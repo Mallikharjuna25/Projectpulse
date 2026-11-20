@@ -29,7 +29,17 @@ export const connectDB = async () => {
 
     logger.info(`MongoDB connected successfully to ${mongoose.connection.host}/${mongoose.connection.name}`);
   } catch (err) {
-    logger.warn(`Direct MongoDB connection failed: ${err.message}. Initializing MongoMemoryServer fallback...`);
+    if (env.NODE_ENV === 'production') {
+      logger.error(`[DATABASE ERROR] Failed to connect to MongoDB at ${mongoUri.replace(/:[^:]*@/, ':****@')}`);
+      logger.error(`Reason: ${err.message}`);
+      logger.error('Please verify that:');
+      logger.error('1. MONGO_URI is set in Render Dashboard -> Environment.');
+      logger.error('2. MongoDB Atlas username & password are correct (without < > brackets).');
+      logger.error('3. MongoDB Atlas -> Network Access allows 0.0.0.0/0 (Access from Anywhere).');
+      throw err;
+    }
+
+    logger.warn(`Direct MongoDB connection failed: ${err.message}. Initializing MongoMemoryServer fallback for local development...`);
     try {
       const { MongoMemoryServer } = await import('mongodb-memory-server');
       memoryServerInstance = await MongoMemoryServer.create();
@@ -40,7 +50,7 @@ export const connectDB = async () => {
       logger.info('Connected to In-Memory MongoDB successfully.');
     } catch (fallbackErr) {
       logger.error('Failed to initialize MongoDB connection or MongoMemoryServer fallback', fallbackErr);
-      throw fallbackErr;
+      throw err;
     }
   }
 
