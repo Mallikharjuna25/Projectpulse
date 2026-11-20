@@ -1,0 +1,30 @@
+project pulse 
+
+the purpose of the website is find projects,work in a project with team ,communication,tarcking,tasks assigning,deadline etcc of projects can be done simple in this webapplication app 
+
+roles
+1.super admin --- is to create colleges and maintain the list of active clgs
+                 
+        default:
+                   mail:superadmin@projectpulse.edu
+                   pass:Password@123
+
+2. clg admin ---after super admin creates clg he will get access to the clg here clg admin can create departmants ,students ,faculty accounts and alss can create a project assign to student with faculty and monitor end to end
+              
+                mail:assigned by superamdin
+                pass :Password@123  (can change later)
+
+3.faculty admin --- clg admin create faculty he will verify the task and project progress
+               
+          mail:assigned by clg admin
+          pass :Password@123 (can change later)
+
+4.student account --- student account can be created own or assigned by clg admin 
+                     1.student create a project and can work with team or individual
+                     2.can work on the projects clg access
+
+          mail:assingned by clg or he can create account with his own mail
+          pass : Password@123 (if assigned by clg ) if he created account then he can set password 
+
+note : 1.all this login work in single general login page 
+       2.all student ,faculty and clg mail should be clg domain only (clg amdin mail can be in any domain)
