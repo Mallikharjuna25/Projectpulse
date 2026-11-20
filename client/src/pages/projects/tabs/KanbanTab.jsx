@@ -201,17 +201,17 @@ export const KanbanTab = ({ projectId, teamMembers = [], canManage = false }) =>
   return (
     <div className="space-y-6">
       {/* Kanban Filter & Actions Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-surface-elevation-1 border border-border-glass shadow-sm">
         <div className="flex flex-wrap items-center gap-3 flex-1">
           {/* Search */}
           <div className="relative min-w-[200px] flex-1 sm:flex-initial">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary" />
             <input
               type="text"
               placeholder="Search tasks..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl bg-surface-container-lowest border border-border-glass text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-amber-light transition-all"
             />
           </div>
 
@@ -219,7 +219,7 @@ export const KanbanTab = ({ projectId, teamMembers = [], canManage = false }) =>
           <select
             value={filterAssignee}
             onChange={(e) => setFilterAssignee(e.target.value)}
-            className="text-xs px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"
+            className="text-xs px-3 py-1.5 rounded-xl bg-surface-container-lowest border border-border-glass text-text-secondary focus:outline-none focus:border-amber-light transition-all"
           >
             <option value="">All Assignees</option>
             {teamMembers.map((m) => (
@@ -233,7 +233,7 @@ export const KanbanTab = ({ projectId, teamMembers = [], canManage = false }) =>
           <select
             value={filterPriority}
             onChange={(e) => setFilterPriority(e.target.value)}
-            className="text-xs px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"
+            className="text-xs px-3 py-1.5 rounded-xl bg-surface-container-lowest border border-border-glass text-text-secondary focus:outline-none focus:border-amber-light transition-all"
           >
             <option value="">All Priorities</option>
             <option value="CRITICAL">Critical</option>
@@ -246,7 +246,7 @@ export const KanbanTab = ({ projectId, teamMembers = [], canManage = false }) =>
         <div className="flex items-center gap-2">
           <button
             onClick={fetchTasks}
-            className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400"
+            className="p-2 rounded-xl border border-border-glass hover:bg-surface-elevation-2 text-text-secondary hover:text-amber-light transition-colors"
             title="Refresh board"
           >
             <RefreshCw className="w-3.5 h-3.5" />
@@ -259,7 +259,7 @@ export const KanbanTab = ({ projectId, teamMembers = [], canManage = false }) =>
                 setTargetColumnForNew('TODO');
                 setShowTaskModal(true);
               }}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm transition-all"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-primary-container hover:bg-amber-bright text-white shadow-[0_0_12px_rgba(255,107,0,0.3)] transition-all"
             >
               <Plus className="w-4 h-4" /> Add Task
             </button>
