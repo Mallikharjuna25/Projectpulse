@@ -1,6 +1,14 @@
+import dns from 'dns';
 import mongoose from 'mongoose';
 import { env } from './env.js';
 import { logger } from '../utils/logger.js';
+
+// Configure public DNS servers to resolve MongoDB Atlas SRV records on Windows/local networks
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+} catch (dnsErr) {
+  // Ignore if unsupported in environment
+}
 
 let memoryServerInstance = null;
 
@@ -10,6 +18,9 @@ let memoryServerInstance = null;
 export const connectDB = async () => {
   try {
     const mongoUri = env.MONGO_URI;
+    if (mongoUri.includes('<db_username>') || mongoUri.includes('<db_password>')) {
+      logger.warn('[MONGODB CONFIG] MONGO_URI contains literal "<db_username>" or "<db_password>". Please replace them with your actual MongoDB Atlas database username and password in server/.env');
+    }
     logger.info(`Attempting MongoDB connection to: ${mongoUri.replace(/:[^:]*@/, ':****@')}`);
 
     await mongoose.connect(mongoUri, {
