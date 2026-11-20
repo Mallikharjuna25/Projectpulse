@@ -17,7 +17,8 @@ import {
   CheckSquare,
   FileCheck,
   Megaphone,
-  Clock
+  Clock,
+  KeyRound
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
@@ -363,10 +364,10 @@ export const Topbar = ({ onToggleSidebar }) => {
                 <Link
                   to="/settings"
                   onClick={() => setDropdownOpen(false)}
-                  className="flex items-center gap-2.5 px-3.5 py-2 text-xs hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
+                  className="flex items-center gap-2.5 px-3.5 py-2 text-xs hover:bg-slate-50 dark:hover:bg-slate-800 text-amber-600 dark:text-amber-400 font-medium"
                 >
-                  <Settings className="w-4 h-4 text-slate-400" />
-                  <span>Account Settings</span>
+                  <KeyRound className="w-4 h-4 text-amber-500" />
+                  <span>Update Password</span>
                 </Link>
               </div>
 

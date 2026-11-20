@@ -334,8 +334,8 @@ describe('Sprint 2 – College, Department & User Management Tests', () => {
       expect(res.body.data.user.skills).toContain('ROS2');
     });
 
-    it('should allow user to change their password and log in with new password', async () => {
-      // 1. Change password
+    it('should allow student to change their password and log in with new password while old password fails', async () => {
+      // 1. Change student password
       const changeRes = await request(app)
         .post('/api/v1/users/change-password')
         .set('Authorization', `Bearer ${c1StudentToken}`)
@@ -346,6 +346,7 @@ describe('Sprint 2 – College, Department & User Management Tests', () => {
 
       expect(changeRes.status).toBe(200);
       expect(changeRes.body.success).toBe(true);
+      expect(changeRes.body.message).toMatch(/password changed successfully/i);
 
       // 2. Old password must fail
       const oldLogin = await request(app).post('/api/v1/auth/login').send({
@@ -353,6 +354,7 @@ describe('Sprint 2 – College, Department & User Management Tests', () => {
         password: 'Password@123'
       });
       expect(oldLogin.status).toBe(401);
+      expect(oldLogin.body.success).toBe(false);
 
       // 3. New password must succeed
       const newLogin = await request(app).post('/api/v1/auth/login').send({
@@ -360,8 +362,9 @@ describe('Sprint 2 – College, Department & User Management Tests', () => {
         password: 'NewSecurePassword@2026'
       });
       expect(newLogin.status).toBe(200);
+      expect(newLogin.body.success).toBe(true);
 
-      // Restore password back to Password@123 for other tests
+      // Restore password back to Password@123
       await request(app)
         .post('/api/v1/users/change-password')
         .set('Authorization', `Bearer ${newLogin.body.data.accessToken}`)
@@ -370,6 +373,115 @@ describe('Sprint 2 – College, Department & User Management Tests', () => {
           newPassword: 'Password@123'
         });
     }, 20000);
+
+    it('should allow faculty to change their password and log in with new password while old password fails', async () => {
+      // 1. Faculty logs in first
+      const facLogin = await request(app).post('/api/v1/auth/login').send({
+        email: 'faculty.sharma@ait.edu',
+        password: 'Password@123'
+      });
+      expect(facLogin.status).toBe(200);
+      const facToken = facLogin.body.data.accessToken;
+
+      // 2. Change faculty password
+      const changeRes = await request(app)
+        .post('/api/v1/users/change-password')
+        .set('Authorization', `Bearer ${facToken}`)
+        .send({
+          currentPassword: 'Password@123',
+          newPassword: 'FacultyNewSecure@2026'
+        });
+
+      expect(changeRes.status).toBe(200);
+      expect(changeRes.body.success).toBe(true);
+
+      // 3. Old password must immediately fail
+      const oldLogin = await request(app).post('/api/v1/auth/login').send({
+        email: 'faculty.sharma@ait.edu',
+        password: 'Password@123'
+      });
+      expect(oldLogin.status).toBe(401);
+
+      // 4. New password must succeed
+      const newLogin = await request(app).post('/api/v1/auth/login').send({
+        email: 'faculty.sharma@ait.edu',
+        password: 'FacultyNewSecure@2026'
+      });
+      expect(newLogin.status).toBe(200);
+
+      // Restore password back to Password@123
+      await request(app)
+        .post('/api/v1/users/change-password')
+        .set('Authorization', `Bearer ${newLogin.body.data.accessToken}`)
+        .send({
+          currentPassword: 'FacultyNewSecure@2026',
+          newPassword: 'Password@123'
+        });
+    }, 20000);
+
+    it('should allow college admin to change their password and log in with new password while old password fails', async () => {
+      // 1. College Admin changes password
+      const changeRes = await request(app)
+        .post('/api/v1/users/change-password')
+        .set('Authorization', `Bearer ${c1AdminToken}`)
+        .send({
+          currentPassword: 'Password@123',
+          newPassword: 'AdminNewSecure@2026'
+        });
+
+      expect(changeRes.status).toBe(200);
+      expect(changeRes.body.success).toBe(true);
+
+      // 2. Old password must fail
+      const oldLogin = await request(app).post('/api/v1/auth/login').send({
+        email: 'admin@ait.edu',
+        password: 'Password@123'
+      });
+      expect(oldLogin.status).toBe(401);
+
+      // 3. New password must succeed
+      const newLogin = await request(app).post('/api/v1/auth/login').send({
+        email: 'admin@ait.edu',
+        password: 'AdminNewSecure@2026'
+      });
+      expect(newLogin.status).toBe(200);
+
+      // Restore password back to Password@123
+      await request(app)
+        .post('/api/v1/users/change-password')
+        .set('Authorization', `Bearer ${newLogin.body.data.accessToken}`)
+        .send({
+          currentPassword: 'AdminNewSecure@2026',
+          newPassword: 'Password@123'
+        });
+    }, 20000);
+
+    it('should reject password change when current password is incorrect', async () => {
+      const res = await request(app)
+        .post('/api/v1/users/change-password')
+        .set('Authorization', `Bearer ${c1StudentToken}`)
+        .send({
+          currentPassword: 'WrongPassword@999',
+          newPassword: 'ValidNewPassword@2026'
+        });
+
+      expect(res.status).toBe(400);
+      expect(res.body.success).toBe(false);
+      expect(res.body.message).toMatch(/current password is incorrect/i);
+    });
+
+    it('should reject password change when new password is weak or invalid', async () => {
+      const res = await request(app)
+        .post('/api/v1/users/change-password')
+        .set('Authorization', `Bearer ${c1StudentToken}`)
+        .send({
+          currentPassword: 'Password@123',
+          newPassword: 'weak'
+        });
+
+      expect(res.status).toBe(400);
+      expect(res.body.success).toBe(false);
+    });
   });
 });
 

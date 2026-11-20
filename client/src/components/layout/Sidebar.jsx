@@ -16,7 +16,8 @@ import {
   FileCheck2,
   FileSpreadsheet,
   X,
-  Layers
+  Layers,
+  KeyRound
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 
@@ -30,6 +31,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
           { name: 'Dashboard', path: '/super-admin', icon: LayoutDashboard },
           { name: 'Colleges', path: '/super-admin/colleges', icon: Building },
           { name: 'Notifications', path: '/notifications', icon: Bell },
+          { name: 'Update Password', path: '/settings', icon: KeyRound },
         ];
 
       case 'COLLEGE_ADMIN':
@@ -41,6 +43,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
           { name: 'All Projects', path: '/admin/projects', icon: FolderGit2 },
           { name: 'Calendar', path: '/calendar', icon: Calendar },
           { name: 'Notifications', path: '/notifications', icon: Bell },
+          { name: 'Update Password', path: '/settings', icon: KeyRound },
         ];
 
       case 'FACULTY':
@@ -50,12 +53,14 @@ export const Sidebar = ({ isOpen, onClose }) => {
           { name: 'Supervision Requests', path: '/faculty/requests', icon: Users },
           { name: 'Calendar', path: '/calendar', icon: Calendar },
           { name: 'Notifications', path: '/notifications', icon: Bell },
+          { name: 'Update Password', path: '/settings', icon: KeyRound },
         ];
 
       case 'REVIEWER':
         return [
           { name: 'Dashboard', path: '/reviewer', icon: LayoutDashboard },
           { name: 'Reviews Queue', path: '/reviewer/reviews', icon: FileCheck2 },
+          { name: 'Update Password', path: '/settings', icon: KeyRound },
         ];
 
       case 'STUDENT':
@@ -66,6 +71,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
           { name: 'My Tasks', path: '/tasks', icon: CheckSquare },
           { name: 'Calendar', path: '/calendar', icon: Calendar },
           { name: 'Notifications', path: '/notifications', icon: Bell },
+          { name: 'Update Password', path: '/settings', icon: KeyRound },
         ];
     }
   };
@@ -153,25 +159,31 @@ export const Sidebar = ({ isOpen, onClose }) => {
         </div>
 
         {/* User footer badge */}
-        <div className="p-4 border-t border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/30">
+        <NavLink
+          to="/settings"
+          onClick={onClose}
+          title="Account & Password Settings"
+          className="p-4 border-t border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/30 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors block group"
+        >
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold text-xs shrink-0">
+            <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold text-xs shrink-0 group-hover:ring-2 group-hover:ring-amber-500 transition-all">
               {user?.avatar ? (
                 <img src={user.avatar} alt={user.name} className="w-full h-full rounded-full object-cover" />
               ) : (
                 user?.name?.charAt(0)?.toUpperCase() || 'U'
               )}
             </div>
-            <div className="overflow-hidden">
-              <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate">
+            <div className="overflow-hidden flex-1">
+              <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate group-hover:text-amber-500 transition-colors">
                 {user?.name}
               </p>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
                 {user?.email}
               </p>
             </div>
+            <KeyRound className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-400 transition-colors shrink-0" />
           </div>
-        </div>
+        </NavLink>
       </aside>
     </>
   );

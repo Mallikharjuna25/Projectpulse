@@ -433,8 +433,10 @@ export class UserManagementService {
 
     const salt = await bcrypt.genSalt(12);
     user.passwordHash = await bcrypt.hash(newPassword, salt);
-    // Invalidate all other sessions
+    // Invalidate all active sessions & reset any brute-force tracking
     user.refreshTokenHash = null;
+    user.failedLoginAttempts = 0;
+    user.lockUntil = null;
     await user.save();
 
     return { message: 'Password changed successfully' };
